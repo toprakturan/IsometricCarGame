@@ -14,21 +14,34 @@ public class Player : MonoBehaviour
 
     public bool isKeyPressed;
     private bool isSpeedFull;
+    public bool isGameOver = false;
     
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
     }
+
     void Update()
     {
         PlayerRotation();
+        
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Obsticle")
+        {
+            isGameOver = true;
+        }
     }
 
     private void FixedUpdate()
     {
         mainCamPivot.transform.position = gameObject.transform.position; //Camera poisition fixing to player object position.
         Move();
+
     }
 
     void Move() //Player move with rigidbody component.
