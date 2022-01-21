@@ -5,12 +5,14 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Vector3 _input;
-    [SerializeField] private Rigidbody _rb;
+    [SerializeField] public Rigidbody _rb;
     [SerializeField] public float speed = 15f; //Main speed 
     [SerializeField] private float _turnSpeed = 360f;
     [SerializeField] public GameObject mainCamPivot;
     [SerializeField] public float speedDecreaseMultiplier;
     [SerializeField] public float speedIncreaseMultiplier;
+    [SerializeField] public float maxFuel;
+
 
     public bool isKeyPressed;
     private bool isSpeedFull;
@@ -20,13 +22,13 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        
     }
 
     void Update()
     {
         PlayerRotation();
-        
-
+        FuelSystem(1f);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -41,7 +43,6 @@ public class Player : MonoBehaviour
     {
         mainCamPivot.transform.position = gameObject.transform.position; //Camera poisition fixing to player object position.
         Move();
-
     }
 
     void Move() //Player move with rigidbody component.
@@ -116,5 +117,21 @@ public class Player : MonoBehaviour
         {
             isSpeedFull = false;
         }
+    }
+    public void FuelSystem(float fuelDecreaseValue) //Increase fuel and check fuel 
+    {
+        if(maxFuel >= 0)
+        {
+            maxFuel -= fuelDecreaseValue * Time.deltaTime;
+        }
+        else
+        {
+            isGameOver = true;
+        }
+    }
+
+    public void AddFuel(float amountOfFuel) //We call this method in Fuel_Add script.
+    {
+        maxFuel += amountOfFuel;
     }
 }

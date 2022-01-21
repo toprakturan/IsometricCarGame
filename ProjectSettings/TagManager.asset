@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Speed Powerup
   - Obsticle
+  - Fuel
   layers:
   - Default
   - TransparentFX
