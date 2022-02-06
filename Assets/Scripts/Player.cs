@@ -12,8 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField] public float speedDecreaseMultiplier;
     [SerializeField] public float speedIncreaseMultiplier;
     [SerializeField] public float maxFuel;
+    [SerializeField] public float gemCount = 0;
 
+    //particles
+    [SerializeField] ParticleSystem carSmokeParticle;
+    [SerializeField] ParticleSystem explosionParticle;
 
+    //Bools 
     public bool isKeyPressed;
     private bool isSpeedFull;
     public bool isGameOver = false;
@@ -25,10 +30,17 @@ public class Player : MonoBehaviour
         
     }
 
+    private void Start()
+    {
+        //Get gem count with player prefs
+       gemCount = PlayerPrefs.GetFloat("playerGemCount");
+    }
+
     void Update()
     {
         PlayerRotation();
         FuelSystem(1f);
+        ParticleController();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -100,17 +112,18 @@ public class Player : MonoBehaviour
     void IncreaseSpeed() //Increase speed 
     {
         checkSpeed();
-        if (isSpeedFull == false)
+        if (isSpeedFull == false && isKeyPressed == false)
         {
             speed += speedIncreaseMultiplier * Time.deltaTime;
         }
+       
         
        
     }
 
     void checkSpeed() //Check speed is max or not
     {
-        if(speed >= 15f)
+        if(speed >= 30f)
         {
             isSpeedFull = true;
         }else
@@ -120,18 +133,39 @@ public class Player : MonoBehaviour
     }
     public void FuelSystem(float fuelDecreaseValue) //Increase fuel and check fuel 
     {
-        if(maxFuel >= 0)
+        if(maxFuel >= 0 && isGameOver == false)
         {
             maxFuel -= fuelDecreaseValue * Time.deltaTime;
         }
         else
         {
             isGameOver = true;
+            maxFuel = 1f;
         }
     }
 
     public void AddFuel(float amountOfFuel) //We call this method in Fuel_Add script.
     {
         maxFuel += amountOfFuel;
+    }
+
+    private void ParticleController() //To control particles enabled or disabled.
+    {
+        if(isGameOver == true)
+        {
+            carSmokeParticle.Stop();
+            explosionParticle.Play();
+        }
+        else
+        {
+            explosionParticle.Pause();
+        }
+    }
+
+    //Increase the number of gem by one for per collision and set gem count with prefs(Check GemController script for collision)
+    public void GemCounterMethod()
+    {
+        gemCount++;
+        PlayerPrefs.SetFloat("playerGemCount", gemCount);
     }
 }

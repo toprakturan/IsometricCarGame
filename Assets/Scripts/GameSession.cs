@@ -15,8 +15,6 @@ public class GameSession : MonoBehaviour
     {
         
     }
-
-    
     void Update()
     {
         
@@ -25,7 +23,7 @@ public class GameSession : MonoBehaviour
         int minutes = Mathf.RoundToInt(gameSessionTimer / 60f); //Minutes
         if (player.GetComponent<Player>().isGameOver)
         {
-            player.GetComponent<Player>().enabled = false;
+            //player.GetComponent<Player>().enabled = false;
             player.GetComponent<Player>()._rb = null;
         }
         else

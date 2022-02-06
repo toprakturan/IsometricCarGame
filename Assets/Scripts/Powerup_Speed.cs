@@ -6,6 +6,14 @@ public class Powerup_Speed : MonoBehaviour
 {
     [SerializeField] private float _speedMultiplier = 2;
     [SerializeField] private float powerupDuration = 3f;
+    [SerializeField] ParticleSystem speedPowerupLeft;
+    [SerializeField] ParticleSystem speedPowerupRight;
+
+    private void Start()
+    {
+        speedPowerupLeft.Stop();
+        speedPowerupRight.Stop();
+    }
 
     private void OnTriggerEnter(Collider other) //Check collision with player.
     {
@@ -18,6 +26,8 @@ public class Powerup_Speed : MonoBehaviour
     IEnumerator Pickup(Collider player)
     {
         //Play effect when power up pickedup with Instantiate
+        speedPowerupLeft.Play();
+        speedPowerupRight.Play();
 
         Player _player = player.GetComponent<Player>(); //Get player script
         _player.speed *= _speedMultiplier; //get player speed and multiple 
@@ -27,6 +37,8 @@ public class Powerup_Speed : MonoBehaviour
         GetComponent<Collider>().enabled = false;
 
         yield return new WaitForSeconds(powerupDuration); //Powerup duration
+        speedPowerupLeft.Stop();
+        speedPowerupRight.Stop();
         _player.speed /= _speedMultiplier; //Reverse powerup effect
 
         Destroy(gameObject); 
