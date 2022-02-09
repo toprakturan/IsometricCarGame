@@ -8,11 +8,15 @@ public class Powerup_Speed : MonoBehaviour
     [SerializeField] private float powerupDuration = 3f;
     [SerializeField] ParticleSystem speedPowerupLeft;
     [SerializeField] ParticleSystem speedPowerupRight;
+    
 
     private void Start()
     {
         speedPowerupLeft.Stop();
         speedPowerupRight.Stop();
+        
+
+        
     }
 
     private void OnTriggerEnter(Collider other) //Check collision with player.
@@ -33,7 +37,8 @@ public class Powerup_Speed : MonoBehaviour
         _player.speed *= _speedMultiplier; //get player speed and multiple 
 
         //Set enable false for unexpected collision after powerup pickeup
-        GetComponent<MeshRenderer>().enabled = false;
+        //GetComponent<MeshRenderer>().enabled = false;
+        EnableMeshRenderer();
         GetComponent<Collider>().enabled = false;
 
         yield return new WaitForSeconds(powerupDuration); //Powerup duration
@@ -42,5 +47,19 @@ public class Powerup_Speed : MonoBehaviour
         _player.speed /= _speedMultiplier; //Reverse powerup effect
 
         Destroy(gameObject); 
+    }
+
+    private void EnableMeshRenderer() //Disable all childs mesh renderer component.
+    {
+        Transform[] children = new Transform[transform.childCount];
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            children[i] = transform.GetChild(i);
+        }
+
+        for (int i = 0; i < children.Length; i++)
+        {
+            children[i].gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 }
